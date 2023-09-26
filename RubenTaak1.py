@@ -1,1 +1,1 @@
-streamlit -m run Taak01Puzzle.py
+python -m streamlit run Taak01Puzzle.py
