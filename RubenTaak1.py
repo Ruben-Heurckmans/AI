@@ -1,1 +1,1 @@
-streamlit run your_script.py
+streamlit run Taak01Puzzle.py
