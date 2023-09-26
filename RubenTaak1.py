@@ -1,6 +1,7 @@
-import streamlit as sl
+import streamlit as st
+import pandas as pd
+import numpy as np
 
-sl.write("""
-# My first app
-Hello *world!*
-""")
+st.title('Uber pickups in NYC')
+
+streamlit run uber_pickups.py
