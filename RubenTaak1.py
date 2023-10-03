@@ -1,5 +1,3 @@
-pip install simpleai
-
 import streamlit as st
 from simpleai.search import CspProblem, backtrack
 
