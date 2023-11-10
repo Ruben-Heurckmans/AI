@@ -41,7 +41,6 @@ if model_selection == "Random Forest":
 
     # Plot de confusion matrix met seaborn
     st.pyplot(sns.heatmap(conf_matrix, annot=True, fmt="d", cmap="Blues", cbar=False))
-    st.pyplot(plt.gcf())
 
 elif model_selection == "Support Vector Machine":
     st.subheader("Support Vector Machine Model")
@@ -64,7 +63,6 @@ elif model_selection == "Support Vector Machine":
 
     # Plot de confusion matrix met seaborn
     st.pyplot(sns.heatmap(conf_matrix_svm, annot=True, fmt="d", cmap="Greens", cbar=False))
-    st.pyplot(plt.gcf())
 
 elif model_selection == "K-Nearest Neighbors":
     st.subheader("K-Nearest Neighbors Model")
@@ -87,4 +85,3 @@ elif model_selection == "K-Nearest Neighbors":
 
     # Plot de confusion matrix met seaborn
     st.pyplot(sns.heatmap(conf_matrix_knn, annot=True, fmt="d", cmap="Reds", cbar=False))
-    st.pyplot(plt.gcf())
