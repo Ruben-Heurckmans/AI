@@ -7,7 +7,6 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix
 import seaborn as sns
 import matplotlib.pyplot as plt
-import numpy as np
 
 # Fetch dataset 
 wine = fetch_ucirepo(id=109) 
@@ -41,8 +40,7 @@ if model_selection == "Random Forest":
     conf_matrix = confusion_matrix(y_test.values.ravel(), y_pred)
 
     # Plot de confusion matrix met Matplotlib
-    st.pyplot(plt.imshow(conf_matrix, cmap="Blues", interpolation="nearest"))
-    st.pyplot(plt.colorbar())
+    st.image(plt.imshow(conf_matrix, cmap="Blues", interpolation="nearest"), use_container_width=True)
 
 elif model_selection == "Support Vector Machine":
     st.subheader("Support Vector Machine Model")
@@ -53,3 +51,4 @@ elif model_selection == "Support Vector Machine":
     # Train het model met de trainingsdata
     svm_classifier.fit(X_train, y_train.values.ravel())
 
+    # Voorspel de labels voor
