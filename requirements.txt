@@ -2,5 +2,5 @@ streamlit
 pandas
 scikit-learn
 seaborn
-mathplotlib
+matplotlib
 ucimlrepo
