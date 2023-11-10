@@ -7,6 +7,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix
 import seaborn as sns
 import matplotlib.pyplot as plt
+import numpy as np
 
 # Fetch dataset 
 wine = fetch_ucirepo(id=109) 
@@ -39,8 +40,9 @@ if model_selection == "Random Forest":
     # Maak een confusion matrix
     conf_matrix = confusion_matrix(y_test.values.ravel(), y_pred)
 
-    # Plot de confusion matrix met seaborn
-    st.pyplot(sns.heatmap(conf_matrix, annot=True, fmt="d", cmap="Blues", cbar=False))
+    # Plot de confusion matrix met Matplotlib
+    st.pyplot(plt.imshow(conf_matrix, cmap="Blues", interpolation="nearest"))
+    st.pyplot(plt.colorbar())
 
 elif model_selection == "Support Vector Machine":
     st.subheader("Support Vector Machine Model")
@@ -51,37 +53,3 @@ elif model_selection == "Support Vector Machine":
     # Train het model met de trainingsdata
     svm_classifier.fit(X_train, y_train.values.ravel())
 
-    # Voorspel de labels voor de testdata
-    y_pred_svm = svm_classifier.predict(X_test)
-
-    # Bereken de nauwkeurigheid van het model
-    accuracy_svm = accuracy_score(y_test.values.ravel(), y_pred_svm)
-    st.write("Nauwkeurigheid van het SVM-model:", accuracy_svm)
-
-    # Maak een confusion matrix voor SVM
-    conf_matrix_svm = confusion_matrix(y_test.values.ravel(), y_pred_svm)
-
-    # Plot de confusion matrix met seaborn
-    st.pyplot(sns.heatmap(conf_matrix_svm, annot=True, fmt="d", cmap="Greens", cbar=False))
-
-elif model_selection == "K-Nearest Neighbors":
-    st.subheader("K-Nearest Neighbors Model")
-
-    # Maak een K-Nearest Neighbors Classifier aan
-    knn_model = KNeighborsClassifier(n_neighbors=3)
-
-    # Train het model met de trainingsdata
-    knn_model.fit(X_train, y_train.values.ravel())
-
-    # Voorspel de labels voor de testdata
-    y_pred_knn = knn_model.predict(X_test)
-
-    # Bereken de nauwkeurigheid van het model
-    accuracy_knn = accuracy_score(y_test.values.ravel(), y_pred_knn)
-    st.write("Nauwkeurigheid van het KNN-model:", accuracy_knn)
-
-    # Maak een confusion matrix voor KNN
-    conf_matrix_knn = confusion_matrix(y_test.values.ravel(), y_pred_knn)
-
-    # Plot de confusion matrix met seaborn
-    st.pyplot(sns.heatmap(conf_matrix_knn, annot=True, fmt="d", cmap="Reds", cbar=False))
