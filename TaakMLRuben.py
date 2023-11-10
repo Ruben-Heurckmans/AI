@@ -1,90 +1,79 @@
 import streamlit as st
-from ucimlrepo import fetch_ucirepo 
-from sklearn.model_selection import train_test_split
+import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.metrics import confusion_matrix, accuracy_score
 import seaborn as sns
 import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from ucimlrepo import fetch_ucirepo
 
-# Fetch dataset 
-wine = fetch_ucirepo(id=109) 
-  
-# data (as pandas dataframes) 
-X = wine.data.features 
-y = wine.data.targets 
+st.set_option('deprecation.showPyplotGlobalUse', False)
 
-# Split the dataset into training and testing sets
+# Step 1: Load the dataset and perform EDA
+glass_identification = fetch_ucirepo(id=42)
+X = glass_identification.data.features
+y = glass_identification.data.targets
+
+# Step 2: Split the data into training and test sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Sidebar
-model_selection = st.sidebar.selectbox("Selecteer een model", ["Random Forest", "Support Vector Machine", "K-Nearest Neighbors"])
+# Step 3: Train the baseline model using Random Forest
+rf_model = RandomForestClassifier()
+rf_model.fit(X_train, y_train)
 
-# Model training and evaluation
-if model_selection == "Random Forest":
-    st.subheader("Random Forest Model")
+# Step 4: Train SVM and KNN models
+svm_model = SVC()
+svm_model.fit(X_train, y_train)
 
-    # Train het model met de trainingsdata
-    random_forest_model = RandomForestClassifier(n_estimators=100, random_state=42)
-    random_forest_model.fit(X_train, y_train.values.ravel())
+knn_model = KNeighborsClassifier()
+knn_model.fit(X_train, y_train)
 
-    # Voorspel de labels voor de testdata
-    y_pred = random_forest_model.predict(X_test)
+# Streamlit app
+st.title("Task Machine Learning: Benchmarking")
 
-    # Bereken de nauwkeurigheid van het model
-    accuracy = accuracy_score(y_test.values.ravel(), y_pred)
-    st.write("Nauwkeurigheid van het Random Forest-model:", accuracy)
+# Sidebar controls
+selected_models = st.sidebar.multiselect("Select Models", ["Random Forest", "SVM", "KNN"])
+compare_confusion_matrices = st.sidebar.checkbox("Compare Confusion Matrices")
 
-    # Maak een confusion matrix
-    conf_matrix = confusion_matrix(y_test.values.ravel(), y_pred)
+# Main content
+for selected_model in selected_models:
+    st.subheader(f"{selected_model} Performance:")
 
-    # Plot de confusion matrix met seaborn
-    st.pyplot(sns.heatmap(conf_matrix, annot=True, fmt="d", cmap="Blues", cbar=False))
-    st.pyplot(plt.gcf())
+    if selected_model == "Random Forest":
+        model = rf_model
+    elif selected_model == "SVM":
+        model = svm_model
+    else:
+        model = knn_model
 
-elif model_selection == "Support Vector Machine":
-    st.subheader("Support Vector Machine Model")
+    # Display model performance
+    accuracy = model.score(X_test, y_test)
+    st.write(f"Accuracy: {accuracy}")
 
-    # Initialize the Support Vector Machine classifier
-    svm_classifier = SVC(random_state=42)
+    # Confusion Matrix
+    if compare_confusion_matrices:
+        y_pred = model.predict(X_test)
+        conf_matrix = confusion_matrix(y_test, y_pred)
+        st.subheader(f"{selected_model} Confusion Matrix:")
+        st.write(conf_matrix)
 
-    # Train het model met de trainingsdata
-    svm_classifier.fit(X_train, y_train.values.ravel())
+        # Plot Confusion Matrix with different color map for each model
+        plt.figure(figsize=(9, 7))
+        cmap = "Blues" if selected_model == "Random Forest" else "Greens" if selected_model == "SVM" else "Reds"
+        sns.heatmap(conf_matrix, annot=True, fmt="d", cmap=cmap, cbar=False)
+        plt.title(f"{selected_model} Confusion Matrix")
+        plt.xlabel("Predicted Label")
+        plt.ylabel("True Label")
+        st.pyplot()
 
-    # Voorspel de labels voor de testdata
-    y_pred_svm = svm_classifier.predict(X_test)
-
-    # Bereken de nauwkeurigheid van het model
-    accuracy_svm = accuracy_score(y_test.values.ravel(), y_pred_svm)
-    st.write("Nauwkeurigheid van het SVM-model:", accuracy_svm)
-
-    # Maak een confusion matrix voor SVM
-    conf_matrix_svm = confusion_matrix(y_test.values.ravel(), y_pred_svm)
-
-    # Plot de confusion matrix met seaborn
-    st.pyplot(sns.heatmap(conf_matrix_svm, annot=True, fmt="d", cmap="Greens", cbar=False))
-    st.pyplot(plt.gcf())
-
-elif model_selection == "K-Nearest Neighbors":
-    st.subheader("K-Nearest Neighbors Model")
-
-    # Maak een K-Nearest Neighbors Classifier aan
-    knn_model = KNeighborsClassifier(n_neighbors=3)
-
-    # Train het model met de trainingsdata
-    knn_model.fit(X_train, y_train.values.ravel())
-
-    # Voorspel de labels voor de testdata
-    y_pred_knn = knn_model.predict(X_test)
-
-    # Bereken de nauwkeurigheid van het model
-    accuracy_knn = accuracy_score(y_test.values.ravel(), y_pred_knn)
-    st.write("Nauwkeurigheid van het KNN-model:", accuracy_knn)
-
-    # Maak een confusion matrix voor KNN
-    conf_matrix_knn = confusion_matrix(y_test.values.ravel(), y_pred_knn)
-
-    # Plot de confusion matrix met seaborn
-    st.pyplot(sns.heatmap(conf_matrix_knn, annot=True, fmt="d", cmap="Reds", cbar=False))
-    st.pyplot(plt.gcf())
+# EDA Visualization
+st.subheader("Exploratory Data Analysis (EDA) Visualization:")
+# Bar chart to show the distribution of 'Type_of_glass'
+plt.figure(figsize=(8, 6))
+sns.countplot(x='Type_of_glass', data=glass_identification.data.targets)
+plt.title('Distribution of Glass Types')
+plt.xlabel('Type of Glass')
+plt.ylabel('Count')
+st.pyplot()
