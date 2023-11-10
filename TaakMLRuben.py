@@ -12,7 +12,7 @@ from ucimlrepo import fetch_ucirepo
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
 # Step 1: Load the dataset and perform EDA
-wine = fetch_ucirepo(id=42)
+wine = fetch_ucirepo(id=109)
 X = wine.data.features
 y = wine.data.targets
 
