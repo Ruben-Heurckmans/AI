@@ -1,1 +1,6 @@
-simpleai
+streamlit
+pandas
+scikit-learn
+seaborn
+mathplotlib
+ucimlrepo
