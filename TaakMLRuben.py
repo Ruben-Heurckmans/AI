@@ -12,9 +12,9 @@ from ucimlrepo import fetch_ucirepo
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
 # Step 1: Load the dataset and perform EDA
-glass_identification = fetch_ucirepo(id=42)
-X = glass_identification.data.features
-y = glass_identification.data.targets
+wine = fetch_ucirepo(id=42)
+X = wine.data.features
+y = wine.data.targets
 
 # Step 2: Split the data into training and test sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -70,10 +70,10 @@ for selected_model in selected_models:
 
 # EDA Visualization
 st.subheader("Exploratory Data Analysis (EDA) Visualization:")
-# Bar chart to show the distribution of 'Type_of_glass'
+# Bar chart to show the distribution of 'Wine'
 plt.figure(figsize=(8, 6))
-sns.countplot(x='Type_of_glass', data=glass_identification.data.targets)
-plt.title('Distribution of Glass Types')
-plt.xlabel('Type of Glass')
+sns.countplot(x='wine', data=wine.data.targets)
+plt.title('Distribution of wine Types')
+plt.xlabel('Type of wine')
 plt.ylabel('Count')
 st.pyplot()
