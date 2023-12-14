@@ -5,3 +5,11 @@ seaborn
 matplotlib
 ucimlrepo
 simpleai
+
+
+streamlit
+tensorflow
+scikit-learn
+numpy
+matplotlib
+seaborn
