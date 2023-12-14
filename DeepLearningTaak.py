@@ -25,7 +25,6 @@ def create_model():
 # ...
 
 # Train the model
-@st.cache(allow_output_mutation=True)
 def train_model(epochs):
     model = create_model()
     history = model.fit(X_train, y_train, epochs=epochs, validation_data=(X_val, y_val), batch_size=32)
